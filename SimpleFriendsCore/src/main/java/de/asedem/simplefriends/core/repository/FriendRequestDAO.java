@@ -5,6 +5,7 @@ import de.asedem.simplefriends.core.model.FriendRequestDTO;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class FriendRequestDAO {
 
@@ -20,8 +21,11 @@ public class FriendRequestDAO {
      * @param sender the uuid of the player who sent the request
      * @return the friend requests
      */
-    public List<FriendRequestDTO> getFriendRequestsBySender(UUID sender) {
-        return null;
+    public CompletableFuture<List<FriendRequestDTO>> getFriendRequestsBySender(UUID sender) {
+        return this.simpleFriends.getFriendRequestDB()
+                .prepare("SELECT * FROM friend_requests WHERE sender=?", sender.toString())
+                .query(FriendRequestDTO.class)
+                .get();
     }
 
     /**
@@ -30,7 +34,10 @@ public class FriendRequestDAO {
      * @param receiver the uuid of the player who received the request
      * @return the friend requests
      */
-    public List<FriendRequestDTO> getFriendRequestsByReceiver(UUID receiver) {
-        return null;
+    public CompletableFuture<List<FriendRequestDTO>> getFriendRequestsByReceiver(UUID receiver) {
+        return this.simpleFriends.getFriendRequestDB()
+                .prepare("SELECT * FROM friend_requests WHERE receiver=?", receiver.toString())
+                .query(FriendRequestDTO.class)
+                .get();
     }
 }

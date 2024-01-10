@@ -54,6 +54,7 @@ public class SimpleFriends {
                            @NotNull String password) {
         if (isConnected()) throw new AlreadyConnectedException();
         this.mySQL = new MySQL(host, port, database, user, password);
+        this.createFriendRequestDatabase();
         this.connected = true;
     }
 
@@ -99,5 +100,14 @@ public class SimpleFriends {
      */
     public FriendRequestDAO getFriendRequestDAO() {
         return friendRequestDAO;
+    }
+
+    private void createFriendRequestDatabase() {
+        getFriendRequestDB().prepare("CREATE TABLE IF NOT EXISTS friend_requests (" +
+                "sender VARCHAR(36) NOT NULL," +
+                "receiver VARCHAR(36) NOT NULL," +
+                "sent_at DATETIME," +
+                "PRIMARY KEY (sender, receiver)" +
+                ");").executeUpdateSync(false);
     }
 }
